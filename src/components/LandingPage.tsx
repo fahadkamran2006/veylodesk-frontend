@@ -12,15 +12,35 @@ import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { TrustBadges } from "./TrustBadges";
 import { Toaster } from "./ui/sonner";
+// 1. IMPORT useLocation from react-router-dom
+import { useLocation } from 'react-router-dom';
+// 2. IMPORT useEffect from React
+import { useEffect } from 'react'; 
 
-interface LandingPageProps {
-  onNavigate: (page: "home" | "terms" | "privacy" | "refund" | "newsletter") => void;
-}
 
-export function LandingPage({ onNavigate }: LandingPageProps) {
+export function LandingPage() {
+  // 3. INITIALIZE useLocation hook
+  const location = useLocation();
+
+  // 4. ADD the useEffect hook here, after the hooks and before the return statement
+  useEffect(() => {
+    // Check if there is a hash (e.g., #pricing) in the URL
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      
+      if (element) {
+        // Use a small delay to ensure the DOM is stable and the page has rendered completely 
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100); 
+      }
+    }
+  }, [location.hash]); // Rerun effect whenever the URL hash changes
+
   return (
     <>
-      <Header onNavigate={onNavigate} />
+      <Header />
       <Hero />
       <TrustBadges />
       <SocialProof />
@@ -40,7 +60,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
       <div id="newsletter">
         <NewsletterSection />
       </div>
-      <Footer onNavigate={onNavigate} />
+      <Footer />
       <Toaster position="top-center" />
     </>
   );
